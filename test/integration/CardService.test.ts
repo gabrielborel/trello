@@ -8,7 +8,8 @@ test("should list cards", async () => {
   const cardService = new CardService(cardsRepository);
   const cards = await cardService.getCards(1);
   expect(cards).toHaveLength(3);
-  expect(cards[0].title).toBe("Activity 1");
-  expect(cards[1].title).toBe("Activity 2");
-  expect(cards[2].title).toBe("Activity 3");
+  expect(cards[0].name).toBe("Activity 1");
+  expect(cards[1].name).toBe("Activity 2");
+  expect(cards[2].name).toBe("Activity 3");
+  await conn.close();
 });

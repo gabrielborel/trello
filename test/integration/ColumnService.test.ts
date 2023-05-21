@@ -11,4 +11,5 @@ test("should list columns", async () => {
   expect(columns[0].name).toBe("To Do");
   expect(columns[1].name).toBe("Doing");
   expect(columns[2].name).toBe("Done");
+  await conn.close();
 });
