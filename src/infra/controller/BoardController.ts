@@ -1,3 +1,4 @@
+import { BoardRepository } from "../../domain/repository/BoardRepository";
 import { BoardService } from "../../service/BoardService";
 import { CardService } from "../../service/CardService";
 import { ColumnService } from "../../service/ColumnService";
@@ -8,10 +9,13 @@ import { CardRepositoryDatabase } from "../repository/CardRepositoryDatabase";
 import { ColumnRepositoryDatabase } from "../repository/ColumnRepositoryDatabase";
 
 export class BoardController {
-  constructor(readonly http: Http, readonly conn: Connection) {
+  constructor(
+    readonly http: Http,
+    readonly conn: Connection,
+    readonly boardRepository: BoardRepository
+  ) {
     this.http.route("get", "/boards", async () => {
-      const boardRepository = new BoardRepositoryDatabase(conn);
-      const boardService = new BoardService(boardRepository);
+      const boardService = new BoardService(this.boardRepository);
       const boards = await boardService.getBoards();
       return boards;
     });
