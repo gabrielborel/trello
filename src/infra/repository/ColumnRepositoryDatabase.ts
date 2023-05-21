@@ -12,7 +12,13 @@ export class ColumnRepositoryDatabase implements ColumnRepository {
     );
     const columns: Column[] = [];
     for (const columnData of columnsData) {
-      columns.push(new Column(columnData.name, columnData.has_estimation));
+      columns.push(
+        new Column(
+          columnData.id_column,
+          columnData.name,
+          columnData.has_estimation
+        )
+      );
     }
     return columns;
   }

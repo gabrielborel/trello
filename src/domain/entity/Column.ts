@@ -1,5 +1,9 @@
 export class Column {
-  constructor(readonly name: string, readonly hasEstimative: boolean) {
+  constructor(
+    readonly id: number,
+    readonly name: string,
+    readonly hasEstimation: boolean
+  ) {
     if (!name) throw new Error("name is required");
   }
 }
