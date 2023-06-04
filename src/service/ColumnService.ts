@@ -17,12 +17,18 @@ export class ColumnService {
   }
 
   async getColumn(columnId: number): Promise<Column> {
-    const column = await this.columnRepository.get(columnId);
+    const column = await this.columnRepository.findById(columnId);
     return column;
   }
 
   async deleteColumn(columnId: number): Promise<void> {
     await this.columnRepository.delete(columnId);
+  }
+
+  async updateColumn(input: UpdateInput): Promise<void> {
+    await this.columnRepository.update(
+      new Column(input.id, input.boardId, input.name, input.hasEstimation)
+    );
   }
 }
 
@@ -31,3 +37,5 @@ type SaveInput = {
   name: string;
   hasEstimation: boolean;
 };
+
+type UpdateInput = Column;

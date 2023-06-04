@@ -1,3 +1,4 @@
+import { Board } from "../domain/entity/Board";
 import { BoardRepository } from "../domain/repository/BoardRepository";
 import { CardRepository } from "../domain/repository/CardRepository";
 import { ColumnRepository } from "../domain/repository/ColumnRepository";
@@ -8,6 +9,11 @@ export class BoardService {
     readonly columnRepository: ColumnRepository,
     readonly cardRepository: CardRepository
   ) {}
+
+  async saveBoard(name: string): Promise<number> {
+    const boardId = await this.boardRepository.save(new Board(1, name));
+    return boardId;
+  }
 
   async getBoards(): Promise<BoardsOutput[]> {
     const boards = await this.boardRepository.findAll();
@@ -47,7 +53,17 @@ export class BoardService {
     }
     return output;
   }
+
+  async deleteBoard(boardId: number): Promise<void> {
+    await this.boardRepository.delete(boardId);
+  }
+
+  async updateBoard(input: UpdateInput): Promise<void> {
+    await this.boardRepository.update(new Board(input.id, input.name));
+  }
 }
+
+type UpdateInput = Board;
 
 type BoardsOutput = {
   id: number;

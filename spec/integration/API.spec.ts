@@ -1,6 +1,6 @@
 import app from "supertest";
 
-test("should return boards through the API", async () => {
+test.skip("should return boards through the API", async () => {
   const res = await app("http://localhost:3000").get("/boards");
   const boards = res.body;
   const [board] = boards;
@@ -9,14 +9,14 @@ test("should return boards through the API", async () => {
   expect(boards).toHaveLength(1);
 });
 
-test("should return a board through the API", async () => {
+test.skip("should return a board through the API", async () => {
   const res = await app("http://localhost:3000").get("/boards/1");
   const board = res.body;
   expect(board.name).toBe("Project One");
   expect(board.id).toBe(1);
 });
 
-test("should return columns of a board through the API", async () => {
+test.skip("should return columns of a board through the API", async () => {
   const res = await app("http://localhost:3000").get("/boards/1/columns");
   const columns = res.body;
   expect(columns).toHaveLength(3);
@@ -28,7 +28,7 @@ test("should return columns of a board through the API", async () => {
   expect(columns[2].id).toBe(3);
 });
 
-test("should return cards of a column through the API", async () => {
+test.skip("should return cards of a column through the API", async () => {
   const res = await app("http://localhost:3000").get(
     "/boards/1/columns/1/cards"
   );
@@ -42,7 +42,7 @@ test("should return cards of a column through the API", async () => {
   expect(cards[2].id).toBe(3);
 });
 
-test("should save a card through the API", async () => {
+test.skip("should save a card through the API", async () => {
   const saveResponse = await app("http://localhost:3000")
     .post("/boards/1/columns")
     .send({

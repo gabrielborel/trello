@@ -5,7 +5,7 @@ import { Connection } from "../database/Connection";
 export class ColumnRepositoryDatabase implements ColumnRepository {
   constructor(readonly conn: Connection) {}
 
-  async get(columnId: number): Promise<Column> {
+  async findById(columnId: number): Promise<Column> {
     const [columnData] = await this.conn.query(
       'SELECT id_column, id_board, name, has_estimation FROM "column" WHERE id_column = $1',
       [columnId]
@@ -50,5 +50,12 @@ export class ColumnRepositoryDatabase implements ColumnRepository {
     await this.conn.query('DELETE FROM "column" WHERE id_column = $1', [
       columnId,
     ]);
+  }
+
+  async update(column: Column): Promise<void> {
+    await this.conn.query(
+      'UPDATE "column" SET name = $1, has_estimation = $2 WHERE id_column = $3',
+      [column.name, column.hasEstimation, column.id]
+    );
   }
 }

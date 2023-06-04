@@ -23,4 +23,23 @@ export class BoardRepositoryDatabase implements BoardRepository {
     }
     return boards;
   }
+
+  async save(board: Board): Promise<number> {
+    const [boardData] = await this.conn.query(
+      "INSERT INTO board (name) VALUES ($1) RETURNING id_board",
+      [board.name]
+    );
+    return boardData.id_board;
+  }
+
+  async update(board: Board): Promise<void> {
+    await this.conn.query("UPDATE board SET name = $1 WHERE id_board = $2", [
+      board.name,
+      board.id,
+    ]);
+  }
+
+  async delete(boardId: number): Promise<void> {
+    await this.conn.query("DELETE FROM board WHERE id_board = $1", [boardId]);
+  }
 }
