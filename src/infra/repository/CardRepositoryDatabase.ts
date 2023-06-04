@@ -12,7 +12,9 @@ export class CardRepositoryDatabase implements CardRepository {
     );
     const cards: Card[] = [];
     for (const cardData of cardsData) {
-      cards.push(new Card(cardData.name, cardData.estimation));
+      cards.push(
+        new Card(cardData.id_card, cardData.name, cardData.estimation)
+      );
     }
     return cards;
   }

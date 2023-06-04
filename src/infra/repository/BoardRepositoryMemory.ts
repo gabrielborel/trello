@@ -4,7 +4,7 @@ export class BoardRepositoryMemory {
   boards: Board[];
 
   constructor() {
-    this.boards = [new Board("Project One")];
+    this.boards = [new Board(1, "Project One")];
   }
 
   async findAll() {

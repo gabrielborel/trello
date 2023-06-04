@@ -4,15 +4,11 @@ import { ColumnRepository } from "../../domain/repository/ColumnRepository";
 import { BoardService } from "../../service/BoardService";
 import { CardService } from "../../service/CardService";
 import { ColumnService } from "../../service/ColumnService";
-import { Connection } from "../database/Connection";
 import { Http } from "../http/Http";
-import { CardRepositoryDatabase } from "../repository/CardRepositoryDatabase";
-import { ColumnRepositoryDatabase } from "../repository/ColumnRepositoryDatabase";
 
 export class BoardController {
   constructor(
     readonly http: Http,
-    readonly conn: Connection,
     readonly boardRepository: BoardRepository,
     readonly columnRepository: ColumnRepository,
     readonly cardRepository: CardRepository
@@ -27,11 +23,20 @@ export class BoardController {
       return boards;
     });
 
+    this.http.route("get", "/boards/:boardId", async (params: any) => {
+      const boardService = new BoardService(
+        boardRepository,
+        columnRepository,
+        cardRepository
+      );
+      const board = await boardService.getBoard(params.boardId);
+      return board;
+    });
+
     this.http.route(
       "get",
       "/boards/:boardId/columns",
       async (params: any, body: any) => {
-        const columnRepository = new ColumnRepositoryDatabase(conn);
         const columnService = new ColumnService(columnRepository);
         const columns = await columnService.getColumns(params.boardId);
         return columns;
@@ -40,13 +45,46 @@ export class BoardController {
 
     this.http.route(
       "get",
-      "/boards/:boardId/columns/:columnId/cards",
+      "/boards/:boardId/columns/:columnId",
       async (params: any, body: any) => {
-        const cardRepository = new CardRepositoryDatabase(conn);
+        const columnService = new ColumnService(columnRepository);
+        const columns = await columnService.getColumn(params.columnId);
+        return columns;
+      }
+    );
+
+    this.http.route(
+      "post",
+      "/boards/:boardId/columns",
+      async (params: any, body: any) => {
+        const columnService = new ColumnService(columnRepository);
+        const columnId = await columnService.saveColumn(body);
+        return columnId;
+      }
+    );
+
+    this.http.route(
+      "delete",
+      "/boards/:boardId/columns/:columnId",
+      async (params: any, body: any) => {
+        const columnService = new ColumnService(columnRepository);
+        await columnService.deleteColumn(params.columnId);
+      }
+    );
+
+    this.http.route(
+      "get",
+      "/boards/:boardId/columns/:columnId/cards",
+      async (params: IGetCardsParams, body: any) => {
         const cardService = new CardService(cardRepository);
-        const cards = await cardService.getCards(params.columnId);
+        const cards = await cardService.getCards(+params.columnId);
         return cards;
       }
     );
   }
 }
+
+type IGetCardsParams = {
+  boardId: string;
+  columnId: string;
+};

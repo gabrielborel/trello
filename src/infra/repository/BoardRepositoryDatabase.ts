@@ -4,13 +4,14 @@ import { Connection } from "../database/Connection";
 
 export class BoardRepositoryDatabase implements BoardRepository {
   constructor(readonly conn: Connection) {}
+
   async findById(boardId: number): Promise<Board> {
     const [boardData] = await this.conn.query(
       "SELECT * FROM board WHERE id_board = $1",
       [boardId]
     );
     if (!boardData) throw new Error("board not found");
-    const board = new Board(boardData.name);
+    const board = new Board(boardData.id_board, boardData.name);
     return board;
   }
 
@@ -18,7 +19,7 @@ export class BoardRepositoryDatabase implements BoardRepository {
     const boardsData = await this.conn.query("SELECT * FROM board");
     const boards: Board[] = [];
     for (const boardData of boardsData) {
-      boards.push(new Board(boardData.name));
+      boards.push(new Board(boardData.id_board, boardData.name));
     }
     return boards;
   }

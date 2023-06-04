@@ -10,14 +10,6 @@ const boardsRepository = new BoardRepositoryDatabase(conn);
 const columnsRepository = new ColumnRepositoryDatabase(conn);
 const cardsRepository = new CardRepositoryDatabase(conn);
 const http = new ExpressAdapter();
-new BoardController(
-  http,
-  conn,
-  boardsRepository,
-  columnsRepository,
-  cardsRepository
-);
+new BoardController(http, boardsRepository, columnsRepository, cardsRepository);
 http.listen(3000);
-process.on("exit", async () => {
-  await conn.close();
-});
+process.on("exit", async () => await conn.close());

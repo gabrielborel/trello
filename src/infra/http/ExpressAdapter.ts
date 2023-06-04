@@ -8,6 +8,7 @@ export class ExpressAdapter implements Http {
 
   constructor() {
     this.app = express();
+    this.app.use(express.json());
   }
 
   route(method: Methods, url: string, callback: Function): void {
@@ -19,7 +20,7 @@ export class ExpressAdapter implements Http {
 
   listen(port: number): void {
     this.app.listen(port, () =>
-      console.log(`server is running on port ${port}`)
+      console.info(`server is running on port ${port}`)
     );
   }
 }

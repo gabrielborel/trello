@@ -1,4 +1,3 @@
-import { Board } from "../domain/entity/Board";
 import { BoardRepository } from "../domain/repository/BoardRepository";
 import { CardRepository } from "../domain/repository/CardRepository";
 import { ColumnRepository } from "../domain/repository/ColumnRepository";
@@ -10,14 +9,15 @@ export class BoardService {
     readonly cardRepository: CardRepository
   ) {}
 
-  async getBoards(): Promise<Board[]> {
+  async getBoards(): Promise<BoardsOutput[]> {
     const boards = await this.boardRepository.findAll();
-    return boards;
+    return boards.map((board) => ({ id: board.id, name: board.name }));
   }
 
   async getBoard(boardId: number): Promise<BoardOutput> {
     const board = await this.boardRepository.findById(boardId);
     const output: BoardOutput = {
+      id: board.id,
       name: board.name,
       estimation: 0,
       columns: [],
@@ -26,6 +26,7 @@ export class BoardService {
     for (const column of columns) {
       let estimation = 0;
       const columnOutput: ColumnOutput = {
+        id: column.id,
         name: column.name,
         estimation: 0,
         hasEstimation: column.hasEstimation,
@@ -36,6 +37,7 @@ export class BoardService {
         output.estimation += card.estimation;
         columnOutput.estimation += card.estimation;
         columnOutput.cards.push({
+          id: card.id,
           name: card.name,
           estimation: card.estimation,
         });
@@ -47,14 +49,21 @@ export class BoardService {
   }
 }
 
+type BoardsOutput = {
+  id: number;
+  name: string;
+};
+
 type ColumnOutput = {
+  id: number;
   name: string;
   estimation: number;
   hasEstimation: boolean;
-  cards: { name: string; estimation: number }[];
+  cards: { id: number; name: string; estimation: number }[];
 };
 
 type BoardOutput = {
+  id: number;
   name: string;
   estimation: number;
   columns: ColumnOutput[];
