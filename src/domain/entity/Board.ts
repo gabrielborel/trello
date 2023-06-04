@@ -1,5 +1,5 @@
 export class Board {
-  constructor(readonly name: string) {
+  constructor(readonly id: number, readonly name: string) {
     if (!name) throw new Error("name is required");
   }
 }
